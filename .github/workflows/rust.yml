@@ -27,12 +27,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Build APK with Macroquad toolchain
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Set up Rust Android target
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-linux-android
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+      - name: Install Android SDK and NDK packages
         run: |
-          docker run --rm \
-            -v "${{ github.workspace }}:/root/src" \
-            -w /root/src \
-            notfl3/cargo-apk bash -lc 'set -e; mkdir -p ~/.android; touch ~/.android/repositories.cfg; yes | /opt/android-sdk-linux/cmdline-tools/latest/bin/sdkmanager --sdk_root=/opt/android-sdk-linux "platforms;android-36" "build-tools;36.0.0-rc5"; test -f /opt/android-sdk-linux/platforms/android-36/android.jar; cargo quad-apk build --release'
+          yes | sdkmanager --licenses
+          sdkmanager --install "platforms;android-36" "build-tools;36.0.0" "ndk;27.2.12479018"
+          echo "NDK_HOME=$ANDROID_HOME/ndk/27.2.12479018" >> "$GITHUB_ENV"
+          echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/27.2.12479018" >> "$GITHUB_ENV"
+      - name: Install cargo-quad-apk
+        run: cargo install cargo-quad-apk --locked
+      - name: Build APK
+        run: cargo quad-apk build --release
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
