@@ -140,15 +140,17 @@ impl Game {
             return;
         }
 
+        let (mx, my) = mouse_position();
+        let pointer_down = is_mouse_button_down(MouseButton::Left);
+        let pointer_pressed = is_mouse_button_pressed(MouseButton::Left);
+        let in_control_row = my > screen_height() - 125.0;
         let left = is_key_down(KeyCode::Left) || is_key_down(KeyCode::A)
-            || (is_mouse_button_down(MouseButton::Left) && mouse_position().0 < 145.0);
+            || (pointer_down && in_control_row && mx < 100.0);
         let right = is_key_down(KeyCode::Right) || is_key_down(KeyCode::D)
-            || (is_mouse_button_down(MouseButton::Left) && mouse_position().0 > screen_width() - 145.0);
+            || (pointer_down && in_control_row && mx >= 100.0 && mx < 195.0);
         let jump = is_key_pressed(KeyCode::Space) || is_key_pressed(KeyCode::Up)
             || is_key_pressed(KeyCode::W)
-            || (is_mouse_button_pressed(MouseButton::Left)
-                && mouse_position().0 > screen_width() - 145.0
-                && mouse_position().1 < screen_height() - 105.0);
+            || (pointer_pressed && in_control_row && mx > screen_width() - 130.0);
 
         self.player.vx = 0.0;
         if left { self.player.vx -= PLAYER_SPEED; self.player.facing = -1.0; }
@@ -270,7 +272,7 @@ impl Game {
             if !enemy.alive { continue; }
             let x = enemy.x - cam;
             draw_ellipse(x + 17.0, enemy.y + 27.0, 19.0, 5.0, Color::from_rgba(50, 90, 60, 70));
-            draw_rounded_rectangle(x, enemy.y + 5.0, 34.0, 24.0, 8.0, 8.0, Color::from_rgba(151, 76, 48, 255));
+            draw_rectangle(x, enemy.y + 5.0, 34.0, 24.0, Color::from_rgba(151, 76, 48, 255));
             draw_circle(x + 10.0, enemy.y + 15.0, 4.0, WHITE);
             draw_circle(x + 24.0, enemy.y + 15.0, 4.0, WHITE);
             draw_circle(x + 11.0, enemy.y + 16.0, 1.8, BLACK);
@@ -322,7 +324,7 @@ impl Game {
         draw_rectangle(x, GROUND_Y - 112.0, 8.0, 112.0, Color::from_rgba(235, 235, 225, 255));
         draw_triangle(vec2(x + 8.0, GROUND_Y - 110.0), vec2(x + 62.0, GROUND_Y - 92.0),
             vec2(x + 8.0, GROUND_Y - 72.0), Color::from_rgba(230, 65, 65, 255));
-        draw_rectangle(x - 12.0, GROUND_Y - 5.0, 32.0, 5.0, DARKBROWN);
+        draw_rectangle(x - 12.0, GROUND_Y - 5.0, 32.0, 5.0, Color::from_rgba(105, 65, 42, 255));
     }
 
     fn draw_background(&self) {
