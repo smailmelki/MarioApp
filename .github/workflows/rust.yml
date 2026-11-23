@@ -21,3 +21,22 @@ jobs:
         run: cargo check
       - name: Build release
         run: cargo build --release
+
+  android-apk:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build APK with Macroquad toolchain
+        run: |
+          docker run --rm \
+            -v "${{ github.workspace }}:/root/src" \
+            -w /root/src \
+            notfl3/cargo-apk cargo quad-apk build --release
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: MarioApp-Android-APK
+          path: target/android-artifacts/release/apk/*.apk
+          if-no-files-found: error
+          retention-days: 14
