@@ -263,15 +263,15 @@ impl Game {
             let x = coin.x - cam;
             if x < -30.0 || x > screen_width() + 30.0 { continue; }
             let width = 7.0 + coin.phase.sin().abs() * 7.0;
-            draw_ellipse(x, coin.y, width, 13.0, Color::from_rgba(255, 205, 35, 255));
-            draw_ellipse_lines(x, coin.y, width, 13.0, 2.0, Color::from_rgba(190, 120, 0, 255));
+            draw_ellipse(x, coin.y, width, 13.0, 0.0, Color::from_rgba(255, 205, 35, 255));
+            draw_ellipse_lines(x, coin.y, width, 13.0, 2.0, 0.0, Color::from_rgba(190, 120, 0, 255));
             draw_circle(x - 2.0, coin.y - 4.0, 2.0, Color::from_rgba(255, 250, 180, 255));
         }
 
         for enemy in &self.enemies {
             if !enemy.alive { continue; }
             let x = enemy.x - cam;
-            draw_ellipse(x + 17.0, enemy.y + 27.0, 19.0, 5.0, Color::from_rgba(50, 90, 60, 70));
+            draw_ellipse(x + 17.0, enemy.y + 27.0, 19.0, 5.0, 0.0, Color::from_rgba(50, 90, 60, 70));
             draw_rectangle(x, enemy.y + 5.0, 34.0, 24.0, Color::from_rgba(151, 76, 48, 255));
             draw_circle(x + 10.0, enemy.y + 15.0, 4.0, WHITE);
             draw_circle(x + 24.0, enemy.y + 15.0, 4.0, WHITE);
@@ -307,7 +307,7 @@ impl Game {
         let x = p.x - self.camera_x;
         let y = p.y;
         // شخصية مغامر أصلية بأسلوب ألعاب المنصات.
-        draw_ellipse(x + 17.0, y + 47.0, 19.0, 5.0, Color::from_rgba(40, 70, 80, 70));
+        draw_ellipse(x + 17.0, y + 47.0, 19.0, 5.0, 0.0, Color::from_rgba(40, 70, 80, 70));
         draw_rectangle(x + 4.0, y + 24.0, 26.0, 20.0, Color::from_rgba(36, 92, 190, 255));
         draw_rectangle(x + 3.0, y + 39.0, 12.0, 8.0, Color::from_rgba(75, 48, 35, 255));
         draw_rectangle(x + 19.0, y + 39.0, 12.0, 8.0, Color::from_rgba(75, 48, 35, 255));
@@ -333,8 +333,8 @@ impl Game {
         draw_circle(w - 130.0, 115.0, 42.0, Color::from_rgba(255, 231, 125, 255));
         for i in 0..9 {
             let base = i as f32 * 440.0 - (self.camera_x * 0.28) % 440.0;
-            draw_ellipse(base + 100.0, GROUND_Y - 8.0, 145.0, 92.0, Color::from_rgba(82, 177, 111, 255));
-            draw_ellipse(base + 270.0, GROUND_Y - 2.0, 180.0, 112.0, Color::from_rgba(64, 158, 100, 255));
+            draw_ellipse(base + 100.0, GROUND_Y - 8.0, 145.0, 92.0, 0.0, Color::from_rgba(82, 177, 111, 255));
+            draw_ellipse(base + 270.0, GROUND_Y - 2.0, 180.0, 112.0, 0.0, Color::from_rgba(64, 158, 100, 255));
         }
         for i in 0..7 {
             let x = (i as f32 * 230.0 - (self.camera_x * 0.55) % 230.0) + 30.0;
@@ -351,7 +351,7 @@ impl Game {
             let radius = if label == "JUMP" { 42.0 } else { 30.0 };
             draw_circle(x, y, radius, Color::from_rgba(25, 40, 65, 105));
             draw_circle_lines(x, y, radius, 2.0, Color::from_rgba(255, 255, 255, 150));
-            let size = if label == "JUMP" { 17.0 } else { 34.0 };
+            let size: u16 = if label == "JUMP" { 17 } else { 34 };
             let tw = measure_text(label, None, size, 1.0).width;
             draw_text(label, x - tw / 2.0, y + size as f32 / 3.0, size as f32, WHITE);
         }
