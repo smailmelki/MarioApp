@@ -263,7 +263,7 @@ impl Game {
             let x = coin.x - cam;
             if x < -30.0 || x > screen_width() + 30.0 { continue; }
             let width = 7.0 + coin.phase.sin().abs() * 7.0;
-            draw_ellipse(x, coin.y, width, 13.0, GOLD);
+            draw_ellipse(x, coin.y, width, 13.0, Color::from_rgba(255, 205, 35, 255));
             draw_ellipse_lines(x, coin.y, width, 13.0, 2.0, Color::from_rgba(190, 120, 0, 255));
             draw_circle(x - 2.0, coin.y - 4.0, 2.0, Color::from_rgba(255, 250, 180, 255));
         }
@@ -376,5 +376,24 @@ async fn main() {
         game.update(dt);
         game.draw();
         next_frame().await;
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::Rect;
+
+    #[test]
+    fn rectangles_overlap_when_they_intersect() {
+        let a = Rect { x: 0.0, y: 0.0, w: 20.0, h: 20.0 };
+        let b = Rect { x: 10.0, y: 10.0, w: 20.0, h: 20.0 };
+        assert!(a.overlaps(b));
+    }
+
+    #[test]
+    fn rectangles_do_not_overlap_when_separated() {
+        let a = Rect { x: 0.0, y: 0.0, w: 20.0, h: 20.0 };
+        let b = Rect { x: 25.0, y: 0.0, w: 20.0, h: 20.0 };
+        assert!(!a.overlaps(b));
     }
 }
