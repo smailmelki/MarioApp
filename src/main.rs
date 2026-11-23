@@ -364,6 +364,7 @@ fn window_conf() -> Conf {
         window_width: SCREEN_W as i32,
         window_height: SCREEN_H as i32,
         window_resizable: true,
+        high_dpi: true,
         ..Default::default()
     }
 }
