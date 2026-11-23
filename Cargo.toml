@@ -1,0 +1,15 @@
+[package]
+name = "mario_app"
+version = "0.1.0"
+edition = "2021"
+description = "A colorful 2D platformer built with Rust and Macroquad"
+license = "MIT"
+
+[dependencies]
+macroquad = "0.4.14"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true
