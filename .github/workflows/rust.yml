@@ -32,7 +32,7 @@ jobs:
           docker run --rm \
             -v "${{ github.workspace }}:/root/src" \
             -w /root/src \
-            notfl3/cargo-apk cargo quad-apk build --release
+            notfl3/cargo-apk bash -lc 'set -e; mkdir -p ~/.android; touch ~/.android/repositories.cfg; yes | /opt/android-sdk-linux/cmdline-tools/latest/bin/sdkmanager --sdk_root=/opt/android-sdk-linux "platforms;android-36" "build-tools;36.0.0-rc5"; test -f /opt/android-sdk-linux/platforms/android-36/android.jar; cargo quad-apk build --release'
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
